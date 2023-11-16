@@ -5,6 +5,7 @@ import { runMigrations } from './database/migration.js'
 import { Server } from 'socket.io'
 import cors from 'cors'
 import socketListener from './socket-listener.js'
+import socketAuth from './socket-auth.js'
 
 async function connectDatabase () {
   try {
@@ -25,13 +26,16 @@ app.use(cors())
 
 await connectDatabase()
 
-const appServer = app.listen('3000', () => {
+// запускаем сервер
+const httpServer = app.listen('3000', () => {
   console.log('Server started on port 3000 ...')
 })
 
-const io = new Server(appServer, { cors: true })
+// создаём Socket-сервер, используем CORS
+const io = new Server(httpServer, { cors: true })
 
-io.use((socket, next) => {
-  console.log('Token: ', socket.handshake?.query?.token)
-  next()
-}).on('connection', (socketListener))
+// используем авторизацию, задаём CORS-origin 'allow all'
+io.use(socketAuth, { cors: { origin: '*:*' } })
+
+// добавляем обработчик соединения
+io.on('connection', socketListener)
