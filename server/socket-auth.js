@@ -9,6 +9,7 @@ export default async (socket, next) => {
     if (!await databaseController.isAccessKey(accessKey)) {
       const err = new Error('not authorized')
       err.data = { content: 'Invalid accessKey' }
+      console.log('\x1b[31mConnection refused: \x1b[0mInvalid `accessKey`')
       next(err)
       return
     }
