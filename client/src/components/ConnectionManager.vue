@@ -9,11 +9,22 @@ const loadingDisconnection = ref(false);
 
 function connect() {
     store.resetSocket()
-    store.socket.connect()
+    loadingConnection.value = true
+
+    setTimeout(() => {
+        store.socket.connect()
+        loadingConnection.value = false
+    }, 1000)
+    
 };
 
 function disconnect() {
-    store.socket.disconnect()
+
+    loadingDisconnection.value = true
+    setTimeout(() => {
+        store.socket.disconnect()
+        loadingDisconnection.value = false
+    }, 1000)
 }
 </script>
 <template>
