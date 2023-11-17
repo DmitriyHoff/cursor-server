@@ -30,19 +30,34 @@ class SocketController {
       client = await databaseController.getClientByUUID(accessKey)
     }
 
-    // получаем список клиентов, которые онлайн
-    const onlineUsers = socketList.getOnlineClients()
+    const defaultPoint = { x: 0, y: 0 }
+    socketList.add({
+      socketId: this.socket.id,
+      accessKey: client.uuid,
+      clientId: client.id,
+      clientName: client.name,
+      point: defaultPoint
+    })
 
+    // получаем список клиентов, которые онлайн
+    const onlineUsers = socketList.getOnlineAccessKeys()
     // получаем информацию о них из БД
     const onlineClients = await databaseController.getClientsByUUID(...onlineUsers)
+    const payload = { id: client.id, name: client.name, point: defaultPoint }
+    console.log('payload: ', payload)
+    this.socket.broadcast.emit('user connected', payload)
+
+    // console.log('onlineClients: ', onlineClients)
 
     // отправляем сообщение
-    const payload = client.toJSON()
-    this.socket.emit('token', { ...payload, onlineClients })
-
-    console.log('Broadcast token \x1b[33m\x1b[35m%s\x1b[0m', client.uuid)
-    this.socket.broadcast.emit('user connected', { id: client.id, name: client.name, point: { x: 0, y: 0 } })
-
+    const payload2 = client.toJSON()
+    this.socket.emit('token', {
+      ...payload2,
+      onlineClients: onlineClients.map(item => ({
+        ...item,
+        point: socketList.getClientPoint(item.id)
+      }))
+    })
     return client
   }
 
@@ -53,7 +68,6 @@ class SocketController {
     console.log(socketList.getClientInfoBySocketId(socket.id))
     const payload = { clientId: client.clientId, clientName: client.clientName, point: client.point }
     this.socket.broadcast.emit('user move', payload)
-    console.log('user move: ', payload)
   }
 
   async onDisconnect (socket) {

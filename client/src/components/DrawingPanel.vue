@@ -1,6 +1,6 @@
 <script setup>
 import DrawingCursor from "./DrawingCursor.vue"
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import { useSocketStore } from "../stores/socket-store";
 
 const user = ref({ id: 0, name: 'user', x: 0, y: 0 })
@@ -18,6 +18,7 @@ function renderCursor(e) {
     }
     user.value.x = point.x;
     user.value.y = point.y;
+    store.setUserPoint(point)
     store.socket.emit('move', point)
 }
 
@@ -36,14 +37,14 @@ function getCursor(e) {
 
 <template>
     <div id="drawing-panel" @mousemove="getCursor($event)">
-    
-        <DrawingCursor class="drawing-cursor" style="color:dodgerblue;"
-        :pos-x="user.x" :pos-y="user.y" :name="user.name"
-        :style="{left: user.x + 'px', top: user.y + 'px' }"/>
 
-        <!-- <DrawingCursor v-for="client in store.state.clientsList" class="drawing-cursor" 
+        <!-- <DrawingCursor class="drawing-cursor" style="color:dodgerblue;"
+        :pos-x="user.x" :pos-y="user.y" :name="user.name"
+        :style="{left: user.x + 'px', top: user.y + 'px' }"/> -->
+
+        <DrawingCursor v-for="client in store.state.clientsList" class="drawing-cursor" 
         :pos-x="client.point.x" :pos-y="client.point.y" :name="client.name"
-        :style="{left: client.point.x + 'px', top: client.point.y + 'px' }" :key="client.id"/> -->
+        :style="{left: client.point.x + 'px', top: client.point.y + 'px' }" :key="client.id"/>
     </div>
     
 </template>

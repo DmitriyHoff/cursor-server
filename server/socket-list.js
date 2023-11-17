@@ -17,8 +17,17 @@ class SocketList {
     return this.sockets.find(item => (item.socketId === socketId))
   }
 
+  getOnlineAccessKeys () {
+    return socketList.sockets.map((item) => item.accessKey)
+  }
+
   getOnlineClients () {
     return socketList.sockets.map((item) => item.accessKey)
+  }
+
+  getClientPoint (id) {
+    const client = socketList.sockets.find((item) => item.clientId === id)
+    return client.point
   }
 }
 const socketList = new SocketList()

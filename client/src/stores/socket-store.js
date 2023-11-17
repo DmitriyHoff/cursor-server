@@ -32,6 +32,7 @@ export const useSocketStore = defineStore('socket', () => {
   
   socket.on("disconnect", () => {
     console.log('disconnect...')
+    state.value.clientsList = []
    // state.value.connected = false
   });
   
@@ -44,15 +45,16 @@ export const useSocketStore = defineStore('socket', () => {
 
   socket.on("user move", (...args) => {
     const [move] = args
-
-    const index = state.value.clientsList.findIndex((item) => item.id === move.clientId)
-    state.value.clientsList[index].point = move.point
+    console.log('user move: ', move)
+    const client = state.value.clientsList.find((item) => item.id === move.clientId)
+    client.point = move.point
 
   })
   
   socket.on("user disconnected", (...args) => {
     const [user] = args
-    const index = state.value.clientsList.indexOf(user)
+    console.log('user disconnected: ', user)
+    const index = state.value.clientsList.findIndex((item) => item.id === user.id)
     state.value.clientsList.splice(index, 1)
   });
 
@@ -66,8 +68,13 @@ export const useSocketStore = defineStore('socket', () => {
     }
   }
 
+  function setUserPoint(point){
+    const userClient = state.value.clientsList.find((item)=> item.id === state.value.token?.id)
+    if(userClient) userClient.point = point
+  }
+
   const getUserName = computed(() => {
     return state.value.token.name ? state.value.token.name : '[user_name]'
   })
-  return { socket, state, getUserName, resetSocket }
+  return { socket, state, getUserName, resetSocket, setUserPoint }
 })

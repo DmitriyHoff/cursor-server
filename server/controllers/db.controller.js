@@ -47,7 +47,10 @@ class DatabaseController {
   async getClientsByUUID (...uuids) {
     const clients = await Client.findAll({
       where: { uuid: [...uuids] },
-      attributes: { exclude: ['uuid'] }
+      attributes: {
+        exclude: ['uuid']
+      },
+      raw: true
     })
     return clients
   }
@@ -62,7 +65,8 @@ class DatabaseController {
       where: { uuid: { [Op.notIn]: [...uuids] } },
       attributes: { exclude: ['uuid'] }
     })
-    return client
+    // .then((data)=> data.toJSON())
+    return client.toJSON()
   }
 
   /**
