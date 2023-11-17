@@ -3,22 +3,22 @@ class SocketList {
     this.sockets = []
   }
 
-  add ({ socketId, accessKey }, setOnlineCallback = null) {
-    this.sockets.push({ socketId, accessKey })
-    // set online
-    if (setOnlineCallback) {
-      setOnlineCallback(accessKey, true)
-    }
+  add ({ socketId, accessKey, clientId, clientName, point }) {
+    this.sockets.push({ socketId, accessKey, clientId, clientName, point })
   }
 
   delete (socketId) {
-    const socketRecord = this.getAccessKeyBySocketId(socketId)
+    const socketRecord = this.getClientInfoBySocketId(socketId)
 
     this.sockets.splice(this.sockets.indexOf(socketRecord), 1)
   }
 
-  getAccessKeyBySocketId (socketId) {
+  getClientInfoBySocketId (socketId) {
     return this.sockets.find(item => (item.socketId === socketId))
+  }
+
+  getOnlineClients () {
+    return socketList.sockets.map((item) => item.accessKey)
   }
 }
 const socketList = new SocketList()

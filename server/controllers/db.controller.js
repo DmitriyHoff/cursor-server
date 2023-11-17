@@ -45,8 +45,11 @@ class DatabaseController {
    * @returns Вобращает массив объектов `Client`
    */
   async getClientsByUUID (...uuids) {
-    const client = await Client.findAll({ where: { uuid: [...uuids] } })
-    return client
+    const clients = await Client.findAll({
+      where: { uuid: [...uuids] },
+      attributes: { exclude: ['uuid'] }
+    })
+    return clients
   }
 
   /**
@@ -55,7 +58,10 @@ class DatabaseController {
    * @returns Вобращает массив объектов `Client`
    */
   async getClientsExcludeUUID (...uuids) {
-    const client = await Client.findAll({ where: { uuid: { [Op.notIn]: [...uuids] } } })
+    const client = await Client.findAll({
+      where: { uuid: { [Op.notIn]: [...uuids] } },
+      attributes: { exclude: ['uuid'] }
+    })
     return client
   }
 
@@ -66,26 +72,6 @@ class DatabaseController {
   async getClients () {
     const clients = await Client.findAll({ attributes: { exclude: ['uuid'] } })
     return clients
-  }
-
-  // /**
-  //  * Получить список всех клиентов c указанным статусом `online`
-  //  * @param {Boolean} online сетевой статус
-  //  * @returns Возвращает массив объектов `Client`
-  //  */
-  // async getClientsByStatus (online) {
-  //   const clients = await Client.findAll({ where: { online }, attributes: { exclude: ['uuid'] } })
-  //   return clients
-  // }
-
-  /**
-   * Обновить сетевой статус клиента
-   * @param {String} uuid Уникальный ключ
-   * @param {Boolean} online Сетевой статус
-   */
-  async setClientStatus (uuid, online) {
-    const client = await this.getClientByUUID(uuid)
-    await client.update({ online })
   }
 
   /**

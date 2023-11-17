@@ -7,7 +7,7 @@ export default async (request, response) => {
     const { online } = request.query
 
     if (online) {
-      const uuids = socketList.sockets.map((item) => item.accessKey)
+      const uuids = socketList.getOnlineClients()
       switch (online) {
         case 'true' : {
           clients = await databaseController.getClientsByUUID(...uuids)
