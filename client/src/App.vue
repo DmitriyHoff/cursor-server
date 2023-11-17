@@ -26,7 +26,7 @@ const store = useSocketStore()
                 <Listbox class=" w-full md:w-14rem" :options="store.state.clientsList" optionLabel="name" listStyle="height: 600px">
                     <template #option="slotProps">
                         <div class="flex align-items-center">
-                            <i class="pi pi-circle-fill mr-1" style="color: green; font-size: 8px"></i>
+                            <i class="pi pi-circle-fill mr-1" :style="`color: ${slotProps.option.color}; font-size: 8px`"></i>
                             <div>{{ slotProps.option.name }}</div>
                         </div>
                     </template>
