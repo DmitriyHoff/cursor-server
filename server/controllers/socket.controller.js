@@ -21,7 +21,7 @@ class SocketController {
     if (!accessKey) {
       console.log('adding new client...')
       client = await databaseController.addClient('client')
-      client.set({ name: client.name + client.id })
+      client.set({ name: `${client.name}${client.id}` })
       await client.save()
 
     // если указан - возвращаем существующего
@@ -34,16 +34,16 @@ class SocketController {
     socketList.add({
       socketId: this.socket.id,
       accessKey: client.uuid,
-      clientId: client.id,
-      clientName: client.name,
+      id: client.id,
+      name: client.name,
       point: defaultPoint
     })
 
     // получаем список клиентов, которые онлайн
     const onlineUsers = socketList.getOnlineAccessKeys()
     // получаем информацию о них из БД
-    const onlineClients = await databaseController.getClientsByUUID(...onlineUsers)
-    const payload = { id: client.id, name: client.name, point: defaultPoint }
+    // const onlineClients = await databaseController.getClientsByUUID(...onlineUsers)
+    const payload = socketList.getClientInfoBySocketId(this.socket.id) // { id: client.id, name: client.name, point: defaultPoint }
 
     this.socket.broadcast.emit('user connected', payload)
 
@@ -53,25 +53,25 @@ class SocketController {
     const payload2 = client.toJSON()
     this.socket.emit('token', {
       ...payload2,
-      onlineClients: onlineClients.map(item => ({
-        ...item,
-        point: socketList.getClientPoint(item.id)
-      }))
+      onlineClients: socketList.getOnlineClients()
     })
     return client
   }
 
   async onMove (socket, ...args) {
     const [point] = args
-    const client = socketList.getClientInfoBySocketId(socket.id)
-    client.point = point
+    const item = socketList.getItem(socket.id)
+    // if (!item) return
+    // console.log('item: ', item)
+    item.point = point
+    const payload = socketList.getClientInfoBySocketId(socket.id)
 
-    const payload = { clientId: client.clientId, clientName: client.clientName, point: client.point }
+    // const payload = { clientId: client.clientId, clientName: client.clientName, point: client.point }
     this.socket.broadcast.emit('user move', payload)
   }
 
   async onDisconnect (socket) {
-    const { accessKey } = socketList.getClientInfoBySocketId(socket.id)
+    const { accessKey } = socketList.getItem(socket.id)
     const client = await databaseController.getClientByUUID(accessKey)
     socketList.delete(this.socket.id)
 

@@ -44,7 +44,7 @@ function getCursor(e) {
 
         <DrawingCursor v-for="client in store.state.clientsList" class="drawing-cursor" 
         :pos-x="client.point.x" :pos-y="client.point.y" :name="client.name"
-        :style="{left: client.point.x + 'px', top: client.point.y + 'px' }" :key="client.id"/>
+        :style="{left: client.point.x + 'px', top: client.point.y + 'px', color:client?.color }" :key="client.id"/>
     </div>
     
 </template>

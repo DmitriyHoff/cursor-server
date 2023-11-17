@@ -45,7 +45,7 @@ export const useSocketStore = defineStore('socket', () => {
   socket.on("user move", (...args) => {
     const [move] = args
     console.log('user move: ', move)
-    const client = state.value.clientsList.find((item) => item.id === move.clientId)
+    const client = state.value.clientsList.find((item) => item.id === move.id)
     client.point = move.point
 
   })
