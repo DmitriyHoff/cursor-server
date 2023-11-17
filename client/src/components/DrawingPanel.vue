@@ -37,11 +37,6 @@ function getCursor(e) {
 
 <template>
     <div id="drawing-panel" @mousemove="getCursor($event)">
-
-        <!-- <DrawingCursor class="drawing-cursor" style="color:dodgerblue;"
-        :pos-x="user.x" :pos-y="user.y" :name="user.name"
-        :style="{left: user.x + 'px', top: user.y + 'px' }"/> -->
-
         <DrawingCursor v-for="client in store.state.clientsList" class="drawing-cursor" 
         :pos-x="client.point.x" :pos-y="client.point.y" :name="client.name"
         :style="{left: client.point.x + 'px', top: client.point.y + 'px', color:client?.color }" :key="client.id"/>

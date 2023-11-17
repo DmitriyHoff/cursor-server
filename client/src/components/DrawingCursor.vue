@@ -27,5 +27,7 @@
     top: 0;
     left: 0;
     transform: translate(16px, -100%);
+    background-color: white;
+    color: #333;
 }
 </style>

@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import { useSocketStore } from "./stores/socket-store";
 import DrawingPanel from "./components/DrawingPanel.vue";
 import ConnectionManager from "./components/ConnectionManager.vue";
