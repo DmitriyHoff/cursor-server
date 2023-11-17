@@ -44,7 +44,7 @@ class SocketController {
     // получаем информацию о них из БД
     const onlineClients = await databaseController.getClientsByUUID(...onlineUsers)
     const payload = { id: client.id, name: client.name, point: defaultPoint }
-    console.log('payload: ', payload)
+
     this.socket.broadcast.emit('user connected', payload)
 
     // console.log('onlineClients: ', onlineClients)
@@ -65,7 +65,7 @@ class SocketController {
     const [point] = args
     const client = socketList.getClientInfoBySocketId(socket.id)
     client.point = point
-    console.log(socketList.getClientInfoBySocketId(socket.id))
+
     const payload = { clientId: client.clientId, clientName: client.clientName, point: client.point }
     this.socket.broadcast.emit('user move', payload)
   }
@@ -77,7 +77,6 @@ class SocketController {
 
     console.log('\x1b[31mClient `%s` disconnected\x1b[0m', client.name)
     this.socket.broadcast.emit('user disconnected', { id: client.id, name: client.name })
-    console.log(socketList.sockets)
   }
 }
 

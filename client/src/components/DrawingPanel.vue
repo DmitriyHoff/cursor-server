@@ -19,7 +19,7 @@ function renderCursor(e) {
     user.value.x = point.x;
     user.value.y = point.y;
     store.setUserPoint(point)
-    store.socket.emit('move', point)
+    store.socket.volatile.emit('move', point)
 }
 
 function getCursor(e) {
@@ -30,7 +30,7 @@ function getCursor(e) {
 
     setTimeout(() => {
       timeout.value = false;
-    }, 20);
+    }, 15);
 }
 
 </script>

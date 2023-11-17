@@ -35,7 +35,9 @@ class DatabaseController {
    * @returns Вобращает объект `Client`
    */
   async getClientByUUID (uuid) {
-    const client = await Client.findOne({ where: { uuid } })
+    const client = await Client.findOne({
+      where: { uuid }
+    })
     return client
   }
 
@@ -63,10 +65,10 @@ class DatabaseController {
   async getClientsExcludeUUID (...uuids) {
     const client = await Client.findAll({
       where: { uuid: { [Op.notIn]: [...uuids] } },
-      attributes: { exclude: ['uuid'] }
+      attributes: { exclude: ['uuid'] },
+      raw: true
     })
-    // .then((data)=> data.toJSON())
-    return client.toJSON()
+    return client
   }
 
   /**
@@ -74,7 +76,12 @@ class DatabaseController {
    * @returns Возвращает массив объектов `Client`
    */
   async getClients () {
-    const clients = await Client.findAll({ attributes: { exclude: ['uuid'] } })
+    const clients = await Client.findAll({
+      attributes: {
+        exclude: ['uuid']
+      },
+      raw: true
+    })
     return clients
   }
 

@@ -1,4 +1,4 @@
-import { ref, reactive, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { io } from "socket.io-client";
 
@@ -33,7 +33,6 @@ export const useSocketStore = defineStore('socket', () => {
   socket.on("disconnect", () => {
     console.log('disconnect...')
     state.value.clientsList = []
-   // state.value.connected = false
   });
   
   socket.on("user connected", (...args) => {
