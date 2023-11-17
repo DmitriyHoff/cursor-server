@@ -10,10 +10,13 @@ class SocketController {
     this.socket = socket
   }
 
+  /**
+   * Отправляет `tocken` пользователю после успешной авторизации
+   * @returns Возвращает `token`
+   */
   async clientLogin () {
     // проверяем accessKey из запроса...
     const { accessKey } = this.socket.handshake?.query
-    console.log('\x1b[33m\x1b[31m%s\x1b[0m', accessKey)
 
     let client
 
@@ -40,36 +43,38 @@ class SocketController {
     })
 
     // получаем список клиентов, которые онлайн
-    const onlineUsers = socketList.getOnlineAccessKeys()
-    // получаем информацию о них из БД
-    // const onlineClients = await databaseController.getClientsByUUID(...onlineUsers)
-    const payload = socketList.getClientInfoBySocketId(this.socket.id) // { id: client.id, name: client.name, point: defaultPoint }
+    const payload = socketList.getClientInfoBySocketId(this.socket.id)
 
     this.socket.broadcast.emit('user connected', payload)
 
-    // console.log('onlineClients: ', onlineClients)
-
     // отправляем сообщение
-    const payload2 = client.toJSON()
+    const token = client.toJSON()
     this.socket.emit('token', {
-      ...payload2,
+      ...token,
       onlineClients: socketList.getOnlineClients()
     })
-    return client
+
+    return token
   }
 
+  /**
+   * Обрабатывает событие `user move`
+   * @param {Socket} socket объект Socket
+   * @param  {...any} args массив параметров
+   */
   async onMove (socket, ...args) {
     const [point] = args
     const item = socketList.getItem(socket.id)
-    // if (!item) return
-    // console.log('item: ', item)
     item.point = point
     const payload = socketList.getClientInfoBySocketId(socket.id)
 
-    // const payload = { clientId: client.clientId, clientName: client.clientName, point: client.point }
     this.socket.broadcast.emit('user move', payload)
   }
 
+  /**
+   * Обрабатывает событие `disconnected`
+   * @param {Socket} socket объект Socket
+   */
   async onDisconnect (socket) {
     const { accessKey } = socketList.getItem(socket.id)
     const client = await databaseController.getClientByUUID(accessKey)

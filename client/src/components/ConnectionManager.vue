@@ -19,7 +19,6 @@ function connect() {
 };
 
 function disconnect() {
-
     loadingDisconnection.value = true
     setTimeout(() => {
         store.socket.disconnect()

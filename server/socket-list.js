@@ -53,10 +53,6 @@ class SocketList {
     const client = socketList.sockets.find((item) => item.clientId === id)
     return client.color
   }
-
-  getClientData (id) {
-
-  }
 }
 const socketList = new SocketList()
 export default socketList

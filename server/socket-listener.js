@@ -4,11 +4,10 @@ export default async (socket) => {
   const socketController = new SocketController()
   socketController.useSocket(socket)
 
-  console.log('\x1b[32m%s\x1b[0m', 'Client connected...')
+  // выполняем авторизацию пользователя
+  const token = await socketController.clientLogin()
 
-  // сохраняем в списке socket.id и accessKey
-  // const { uuid: accessKey, name: clientName, id: clientId } =
-  await socketController.clientLogin()
+  console.log('\x1b[32mClient `%s` connected \x1b[0m', token.name)
 
   socket.on('move', (...args) => socketController.onMove(socket, ...args))
 

@@ -1,11 +1,15 @@
 <script setup>
+import { watch } from "vue";
 import { useSocketStore } from "./stores/socket-store";
 import DrawingPanel from "./components/DrawingPanel.vue";
 import ConnectionManager from "./components/ConnectionManager.vue";
 
 const store = useSocketStore()
-
-
+document.title = '[ disconnected ]'
+watch(() => store.state.token, (newVal) => {
+    document.title = `[ ${newVal.name} ]`
+})
+// document.title = ref(store.state.token?.name) ? store.state.token?.name : 'CursorServer'
 </script>
 
 <template>
