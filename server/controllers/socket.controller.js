@@ -33,6 +33,9 @@ class SocketController {
       client = await databaseController.getClientByUUID(accessKey)
     }
 
+    // записываем лог в БД
+    databaseController.addLog(client.id, 'Connect')
+
     const defaultPoint = { x: 300, y: 300 }
     socketList.add({
       socketId: this.socket.id,
@@ -66,9 +69,11 @@ class SocketController {
     const [point] = args
     const item = socketList.getItem(socket.id)
     item.point = point
-    const payload = socketList.getClientInfoBySocketId(socket.id)
+    const userInfo = socketList.getClientInfoBySocketId(socket.id)
 
-    this.socket.broadcast.emit('user move', payload)
+    this.socket.broadcast.emit('user move', userInfo)
+    // записываем лог в БД
+    databaseController.addLog(userInfo.id, 'Move', point)
   }
 
   /**
@@ -81,6 +86,9 @@ class SocketController {
 
     console.log('\x1b[31mClient `%s` disconnected\x1b[0m', name)
     this.socket.broadcast.emit('user disconnected', { id, name })
+
+    // записываем лог в БД
+    databaseController.addLog(id, 'Disconnect')
   }
 }
 

@@ -95,7 +95,49 @@ class DatabaseController {
     return Boolean(count)
   }
 
-  addLog () {}
+  /**
+   * Проверить существование клиента в БД
+   * @param {*} id Идентификатор клиента
+   * @returns Воращает `true`, если клиент создан
+   */
+  async isClientCreated (id) {
+    const count = await Client.count({ where: { id } })
+    return Boolean(count)
+  }
+
+  /**
+   * Записать лог
+   * @param {Number} clientId Идентификатор клиента
+   * @param {String} actionName Название действия
+   * @param {Object} params Дополнительные параметры
+   * @returns Возвращает объект `Log`
+   */
+  async addLog (clientId, actionName, params = null) {
+    const [actionType] = await ActionType.findOrCreate({ where: { type: actionName } })
+    const action = await Action.create({ type_id: actionType.id, params: JSON.stringify(params) })
+    const log = await Log.create({ client_id: clientId, action_id: action.id })
+    return log
+  }
+
+  async getUserLogs (clientId) {
+    const actions = await Action.findAll({
+      attributes: {
+        exclude: ['id', 'type_id'],
+        include: [[Action.sequelize.literal('"ActionType"."type"'), 'type']]
+      },
+
+      include: [{
+        model: Log,
+        where: { client_id: clientId },
+        attributes: []
+      },
+      {
+        model: ActionType,
+        attributes: []
+      }]
+    })
+    return actions
+  }
 }
 
 export default new DatabaseController()
