@@ -76,12 +76,11 @@ class SocketController {
    * @param {Socket} socket объект Socket
    */
   async onDisconnect (socket) {
-    const { accessKey } = socketList.getItem(socket.id)
-    const client = await databaseController.getClientByUUID(accessKey)
+    const { id, name } = socketList.getItem(socket.id)
     socketList.delete(this.socket.id)
 
-    console.log('\x1b[31mClient `%s` disconnected\x1b[0m', client.name)
-    this.socket.broadcast.emit('user disconnected', { id: client.id, name: client.name })
+    console.log('\x1b[31mClient `%s` disconnected\x1b[0m', name)
+    this.socket.broadcast.emit('user disconnected', { id, name })
   }
 }
 

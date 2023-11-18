@@ -54,6 +54,14 @@ class SocketList {
   getOnlineClients () {
     return socketList.sockets.map((item) => this.getClientInfoBySocketId(item.socketId))
   }
+
+  /**
+   * Получить список подключенных `accessKey`
+   * @returns Возвращает массив `accessKey`
+   */
+  getAccessKeys () {
+    return socketList.sockets.map((item) => item.accessKey)
+  }
 }
 
 const socketList = new SocketList()

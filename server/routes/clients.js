@@ -6,15 +6,21 @@ export default async (request, response) => {
     let clients
     const { online } = request.query
 
+    // если в запросе указан параметр `online`...
     if (online) {
-      const uuids = socketList.getOnlineAccessKeys()
+      // получаем список подключенных клиентов
+      const accessKeys = socketList.getAccessKeys()
+
       switch (online) {
+        // получаем клиентов `online`
         case 'true' : {
-          clients = await databaseController.getClientsByUUID(...uuids)
+          clients = await databaseController.getClientsByUUID(...accessKeys)
           break
         }
+
+        // получаем клиентов `offline`
         case 'false': {
-          clients = await databaseController.getClientsExcludeUUID(...uuids)
+          clients = await databaseController.getClientsExcludeUUID(...accessKeys)
           break
         }
         default: {
