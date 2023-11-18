@@ -33,7 +33,7 @@ class SocketController {
       client = await databaseController.getClientByUUID(accessKey)
     }
 
-    const defaultPoint = { x: 0, y: 0 }
+    const defaultPoint = { x: 300, y: 300 }
     socketList.add({
       socketId: this.socket.id,
       accessKey: client.uuid,
