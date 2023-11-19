@@ -25,8 +25,8 @@ watch(() => store.state.token, (newVal) => {
         </div>
         
         <div class="flex flex-column justify-content-between gap-3" >
-            <div class="card justify-content-center">
-                <Listbox class=" w-full md:w-14rem" :options="store.state.clientsList" optionLabel="name" listStyle="height: 600px">
+            <div class="justify-content-center h-full">
+                <Listbox class="h-full w-full md:w-14rem" :options="store.state.clientsList" optionLabel="name" listStyle="">
                     <template #option="slotProps">
                         <div class="flex align-items-center">
                             <i class="pi pi-circle-fill mr-1" :style="`color: ${slotProps.option.color}; font-size: 8px`"></i>
