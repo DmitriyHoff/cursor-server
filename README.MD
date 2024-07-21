@@ -19,8 +19,7 @@ Real-time приложение
 ### Системные требования
 
 Для работы приложения требуется:
-- Node.js
-- PostgreSQL
+- Node.js и PostgreSQL или Docker
 
 ### Установка
 
