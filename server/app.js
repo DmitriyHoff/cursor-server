@@ -6,6 +6,7 @@ import { Server } from 'socket.io'
 import cors from 'cors'
 import socketListener from './socket-listener.js'
 import socketAuth from './socket-auth.js'
+import dotenv from 'dotenv'
 
 async function connectDatabase () {
   try {
@@ -19,6 +20,7 @@ async function connectDatabase () {
     process.exit(1)
   }
 }
+dotenv.config()
 
 const app = express()
 app.use('/api', router)
@@ -27,8 +29,9 @@ app.use(cors())
 await connectDatabase()
 
 // запускаем сервер
-const httpServer = app.listen('3000', () => {
-  console.log('Server started on port 3000 ...')
+const port = process.env.NODE_DOCKER_PORT || 3000
+const httpServer = app.listen(port, () => {
+  console.log(`Server started on port ${port} ...`)
 })
 
 // создаём Socket-сервер, используем CORS
